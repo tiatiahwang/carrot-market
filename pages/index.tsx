@@ -2,24 +2,24 @@ import type { NextPage } from 'next';
 
 const Home: NextPage = () => {
   return (
-    <form className='flex flex-col space-y-2  p-5 '>
+    <div className='flex flex-col space-y-2  p-5 '>
+      <details className='select-none open:bg-indigo-100 open:text-white'>
+        <summary className='cursor-pointer'>food</summary>
+        <span className='selection:bg-pink-100 selection:text-white'>beef</span>
+      </details>
+      <ul className='list-decimal marker:text-teal-500'>
+        <li>연습</li>
+        <li>tailwindCSS</li>
+        <li>HOT</li>
+      </ul>
       <input
-        type='text'
-        required
-        placeholder='Username'
-        className='peer rounded-md border border-gray-400 p-1'
+        type='file'
+        className='file:cursor-pointer file:rounded-md file:border-0 file:bg-purple-300 file:px-5 file:text-white file:transition-colors file:hover:border file:hover:bg-white file:hover:text-purple-300'
       />
-      <span className='hidden peer-invalid:block peer-invalid:text-red-500'>
-        다시 입력해주세요
-      </span>
-      <span className='hidden peer-valid:block peer-valid:text-teal-500'>
-        합격~!
-      </span>
-      <span className='hidden peer-hover:block peer-hover:text-amber-500'>
-        하이루
-      </span>
-      <input type='submit' value='Login' className='bg-white' />
-    </form>
+      <p className='first-letter:text-7xl first-letter:hover:text-purple-400'>
+        Hello everyone!
+      </p>
+    </div>
   );
 };
 
