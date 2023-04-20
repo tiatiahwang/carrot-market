@@ -2,99 +2,24 @@ import type { NextPage } from 'next';
 
 const Home: NextPage = () => {
   return (
-    <div className='grid min-h-screen gap-10 bg-slate-400 px-20 py-10'>
-      <div className='rounded-3xl bg-white p-6 shadow-xl'>
-        <span className='text-2xl font-semibold'>Select Item</span>
-        <ul>
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div
-              key={i}
-              className='my-2 flex justify-between odd:bg-blue-50 even:bg-yellow-50'
-            >
-              <span className='text-gray-500'>Grey Chair</span>
-              <span className='font-semibold'>$19</span>
-            </div>
-          ))}
-        </ul>
-        <ul>
-          {['하', '', '이', ''].map((c, i) => (
-            <li className='bg-pink-100 py-2 empty:hidden' key={i}>
-              {c}
-            </li>
-          ))}
-        </ul>
-        <div className='mt-2 flex justify-between border-t-2 border-dashed pt-2'>
-          <span>Total</span>
-          <span className='font-semibold'>$10</span>
-        </div>
-        <div className='flex justify-center'>
-          <button
-            className='acitve:bg-yellow-500 mx-auto mt-5 w-2/4 rounded-xl bg-blue-500 p-3 text-center
-        text-white hover:bg-teal-500 hover:text-black focus:bg-red-500'
-          >
-            Checkout
-          </button>
-        </div>
-      </div>
-      <div className='group overflow-hidden rounded-xl bg-white'>
-        <div className='flex justify-between bg-blue-500 p-6 pb-14'>
-          <span className='text-2xl text-white'>Profile</span>
-        </div>
-        <div className='relative -top-5 rounded-3xl bg-white p-6'>
-          <div className='relative -top-16 flex items-end justify-between'>
-            <div className='flex flex-col items-center'>
-              <span className='text-xs text-gray-500'>Orders</span>
-              <span className='font-medium'>430</span>
-            </div>
-            <div className='h-24 w-24 rounded-full bg-pink-100 transition-colors group-hover:bg-pink-800' />
-            <div className='flex flex-col items-center'>
-              <span className='text-xs text-gray-500'>Spent</span>
-              <span className='font-medium'>$2500</span>
-            </div>
-          </div>
-          <div className='relative -mb-10 -mt-12 flex flex-col items-center'>
-            <span className='text-lg font-medium'>Tia Hwang</span>
-            <span className='text-sm text-gray-500'>California, USA</span>
-          </div>
-        </div>
-      </div>
-      <div className='rounded bg-white p-6'>
-        <div className='mb-5 flex items-center justify-between '>
-          <span>⬅️</span>
-          <div className='space-x-3'>
-            <span>⭐️ 4.9</span>
-            <span className='rounded-md p-2 shadow-xl'>🩶</span>
-          </div>
-        </div>
-        <div className='mb-5 h-72 bg-pink-100' />
-        <div className='flex flex-col'>
-          <span className='text-xl font-medium'>Swoon Lounge</span>
-          <span className='text-xs  text-gray-500'>Chair</span>
-          <div className='mb-5 mt-3 flex items-center justify-between'>
-            <div className='space-x-2'>
-              <button className='h-5 w-5 rounded-full bg-yellow-500 ring-yellow-500 ring-offset-2 transition focus:ring-2' />
-              <button className='h-5 w-5 rounded-full bg-indigo-500 ring-indigo-500 ring-offset-2 transition focus:ring-2' />
-              <button className='h-5 w-5 rounded-full bg-teal-500 ring-teal-500 ring-offset-2 transition focus:ring-2' />
-            </div>
-            <div className='flex items-center space-x-5'>
-              <button className='flex aspect-square w-8 items-center justify-center rounded-lg bg-blue-500 text-xl text-white'>
-                -
-              </button>
-              <span>1</span>
-              <button className='flex aspect-square w-8 items-center justify-center rounded-lg bg-blue-500 text-xl text-white'>
-                +
-              </button>
-            </div>
-          </div>
-          <div className='flex items-center justify-between'>
-            <span className='text-2xl font-medium'>$450</span>
-            <button className='rounded-lg bg-blue-500 px-8 py-2 text-center text-xs text-white'>
-              Add to cart
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <form className='flex flex-col space-y-2  p-5 '>
+      <input
+        type='text'
+        required
+        placeholder='Username'
+        className='peer rounded-md border border-gray-400 p-1'
+      />
+      <span className='hidden peer-invalid:block peer-invalid:text-red-500'>
+        다시 입력해주세요
+      </span>
+      <span className='hidden peer-valid:block peer-valid:text-teal-500'>
+        합격~!
+      </span>
+      <span className='hidden peer-hover:block peer-hover:text-amber-500'>
+        하이루
+      </span>
+      <input type='submit' value='Login' className='bg-white' />
+    </form>
   );
 };
 
