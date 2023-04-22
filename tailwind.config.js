@@ -10,5 +10,5 @@ module.exports = {
   darkMode: 'class',
   // @media(prefers-color-scheme)를 기준으로 다크모드 적용 (기본 값)
   // darkMode: 'media',
-  plugins: [],
+  plugins: [require('@tailwindcss/forms')],
 };
