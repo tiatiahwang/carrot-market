@@ -1,12 +1,32 @@
 import { useState } from 'react';
-import { cls } from '../libs/utils';
+import { useForm } from 'react-hook-form';
+import { cls } from '../libs/client/utils';
 import Input from '@/components/input';
 import Button from '@/components/button';
+import useMutation from '@/libs/client/useMutation';
+
+interface EnterForm {
+  email?: string;
+  phone?: string;
+}
 
 export default function Enter() {
+  const [enter, { loading, data, error }] = useMutation('/api/users/enter');
+  const { register, watch, reset, handleSubmit } = useForm<EnterForm>();
   const [method, setMethod] = useState<'email' | 'phone'>('email');
-  const onEmailClick = () => setMethod('email');
-  const onPhoneClick = () => setMethod('phone');
+  const onEmailClick = () => {
+    reset();
+    setMethod('email');
+  };
+  const onPhoneClick = () => {
+    reset();
+    setMethod('phone');
+  };
+  const onValid = (validForm: EnterForm) => {
+    if (loading) return;
+    enter(validForm);
+  };
+
   return (
     <div className='mt-16 px-4'>
       <h3 className='text-center text-3xl font-bold'>Enter to Carrot</h3>
@@ -38,12 +58,24 @@ export default function Enter() {
             </button>
           </div>
         </div>
-        <form className='mt-8 flex flex-col space-y-4'>
+        <form
+          onSubmit={handleSubmit(onValid)}
+          className='mt-8 flex flex-col space-y-4'
+        >
           {method === 'email' ? (
-            <Input name='email' label='Email address' type='email' required />
+            <Input
+              register={register('email', {
+                required: true,
+              })}
+              name='email'
+              label='Email address'
+              type='email'
+              required
+            />
           ) : null}
           {method === 'phone' ? (
             <Input
+              register={register('phone')}
               name='phone'
               label='Phone number'
               type='number'
@@ -51,9 +83,11 @@ export default function Enter() {
               required
             />
           ) : null}
-          {method === 'email' ? <Button text={'Get login link'} /> : null}
+          {method === 'email' ? (
+            <Button text={loading ? 'Loading..' : 'Get login link'} />
+          ) : null}
           {method === 'phone' ? (
-            <Button text={'Get one-time password'} />
+            <Button text={loading ? 'Loading..' : 'Get one-time password'} />
           ) : null}
         </form>
 
