@@ -51,28 +51,28 @@ async function handler(
     },
   });
   if (email) {
-    const mailOptions = {
-      from: process.env.MAILER_EMAIL,
-      to: email,
-      subject: 'Carrot Market Authentication Email',
-      text: `Authentication Code: ${payload}`,
-    };
-    await transporter.sendMail(mailOptions, (error, result) => {
-      if (error) {
-        console.log('Email Authentication Error :', error);
-      } else {
-        console.log('Email Sent: ', result.response);
-      }
-    });
+    // const mailOptions = {
+    //   from: process.env.MAILER_EMAIL,
+    //   to: email,
+    //   subject: 'Carrot Market Authentication Email',
+    //   text: `Authentication Code: ${payload}`,
+    // };
+    // await transporter.sendMail(mailOptions, (error, result) => {
+    //   if (error) {
+    //     console.log('Email Authentication Error :', error);
+    //   } else {
+    //     console.log('Email Sent: ', result.response);
+    //   }
+    // });
   }
-  if (phone) {
-    const message = await twilioClient.messages.create({
-      messagingServiceSid: process.env.TWILIO_MSID,
-      to: process.env.MY_PHONE!,
-      body: `Your login token is ${payload}`,
-    });
-    console.log(message);
-  }
+  // if (phone) {
+  //   const message = await twilioClient.messages.create({
+  //     messagingServiceSid: process.env.TWILIO_MSID,
+  //     to: process.env.MY_PHONE!,
+  //     body: `Your login token is ${payload}`,
+  //   });
+  //   console.log(message);
+  // }
   return res.json({
     ok: true,
   });
