@@ -1,9 +1,17 @@
 import twilio from 'twilio';
+import nodemailer from 'nodemailer';
 import { NextApiRequest, NextApiResponse } from 'next';
 import withHandler, { ResponseType } from '@/libs/server/withHandler';
 import client from '@/libs/server/client';
 
 const twilioClient = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.MAILER_EMAIL,
+    pass: process.env.MAILER_PASS,
+  },
+});
 
 async function handler(
   req: NextApiRequest,
@@ -42,6 +50,21 @@ async function handler(
       },
     },
   });
+  if (email) {
+    const mailOptions = {
+      from: process.env.MAILER_EMAIL,
+      to: email,
+      subject: 'Carrot Market Authentication Email',
+      text: `Authentication Code: ${payload}`,
+    };
+    await transporter.sendMail(mailOptions, (error, result) => {
+      if (error) {
+        console.log('Email Authentication Error :', error);
+      } else {
+        console.log('Email Sent: ', result.response);
+      }
+    });
+  }
   if (phone) {
     const message = await twilioClient.messages.create({
       messagingServiceSid: process.env.TWILIO_MSID,
