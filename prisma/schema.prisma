@@ -13,22 +13,37 @@ datasource db {
 
 model User {
   id        Int      @id @default(autoincrement())
-  phone     String?     @unique
+  phone     String?  @unique
   email     String?  @unique
   name      String
   avatar    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  tokens     Token[]
+  tokens    Token[]
+  products  Product[]
 }
 
 model Token {
   id        Int      @id @default(autoincrement())
-  payload    String   @unique
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payload   String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId    Int
+
+  @@index([userId])
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      Int
+  image       String
+  name        String
+  price       Float
+  description String   @db.MediumText
 
   @@index([userId])
 }
