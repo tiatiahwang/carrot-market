@@ -47,6 +47,7 @@ export default function Enter() {
 
   const router = useRouter();
   useEffect(() => {
+    console.log(tokenData);
     if (tokenData?.ok) {
       router.push('/');
     }

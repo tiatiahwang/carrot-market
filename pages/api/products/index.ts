@@ -8,7 +8,16 @@ async function handler(
   res: NextApiResponse<ResponseType>,
 ) {
   if (req.method === 'GET') {
-    const products = await client.product.findMany({});
+    const products = await client.product.findMany({
+      include: {
+        _count: {
+          select: {
+            favorites: true,
+          },
+        },
+      },
+    });
+    console.log(products);
     res.json({
       ok: true,
       products,
