@@ -7,6 +7,8 @@ import { Answer, Post, User } from '@prisma/client';
 import Link from 'next/link';
 import useMutation from '@/libs/client/useMutation';
 import { cls } from '@/libs/client/utils';
+import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 
 interface AnswerWithUser extends Answer {
   user: User;
@@ -17,7 +19,7 @@ interface PostWithUser extends Post {
   answers: AnswerWithUser[];
   _count: {
     answers: number;
-    wonderings: number;
+    wondering: number;
   };
 }
 
@@ -27,12 +29,26 @@ interface CommunityPostResponse {
   isWondering: boolean;
 }
 
+interface AnswerForm {
+  answer: string;
+}
+
+interface AnswerResponse {
+  ok: boolean;
+  response: Answer;
+}
+
 const CommunityPostDetail: NextPage = () => {
+  const { register, handleSubmit, reset } = useForm<AnswerForm>();
   const router = useRouter();
   const { data, mutate } = useSWR<CommunityPostResponse>(
     router.query.id ? `/api/posts/${router.query.id}` : null,
   );
-  const [wonder] = useMutation(`/api/posts/${router.query.id}/wonder`);
+  const [wonder, { loading }] = useMutation(
+    `/api/posts/${router.query.id}/wonder`,
+  );
+  const [sendAnswer, { loading: answerLoading, data: answerData }] =
+    useMutation<AnswerResponse>(`/api/posts/${router.query.id}/answers`);
   const onWonderClick = () => {
     if (!data) return;
     mutate(
@@ -42,18 +58,29 @@ const CommunityPostDetail: NextPage = () => {
           ...data.post,
           _count: {
             ...data?.post._count,
-            wonderings: data.isWondering
-              ? data?.post._count.wonderings! - 1
-              : data?.post._count.wonderings! + 1,
+            wondering: data.isWondering
+              ? data?.post._count.wondering! - 1
+              : data?.post._count.wondering! + 1,
           },
         },
         isWondering: !data.isWondering,
       },
       false,
     );
-    wonder({});
+    if (!loading) {
+      wonder({});
+    }
   };
-  console.log(data?.isWondering);
+  const onValid = (validForm: AnswerForm) => {
+    if (answerLoading) return;
+    sendAnswer(validForm);
+  };
+  useEffect(() => {
+    if (answerData && answerData.ok) {
+      reset();
+      mutate();
+    }
+  }, [answerData, reset, mutate]);
   return (
     <Layout canGoBack>
       <div>
@@ -103,7 +130,7 @@ const CommunityPostDetail: NextPage = () => {
                   d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
                 ></path>
               </svg>
-              <span>궁금해요 {data?.post?._count?.wonderings}</span>
+              <span>궁금해요 {data?.post?._count?.wondering}</span>
             </button>
             <span className='flex items-center space-x-2 text-sm'>
               <svg
@@ -140,16 +167,17 @@ const CommunityPostDetail: NextPage = () => {
             </div>
           ))}
         </div>
-        <div className='px-4'>
+        <form className='px-4' onSubmit={handleSubmit(onValid)}>
           <TextArea
+            register={register('answer', { required: true, minLength: 5 })}
             name='description'
             placeholder='Answer this question!'
             required
           />
           <button className='mt-2 w-full rounded-md border border-transparent bg-orange-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 '>
-            Reply
+            {answerLoading ? 'Loading...' : 'Reply'}
           </button>
-        </div>
+        </form>
       </div>
     </Layout>
   );

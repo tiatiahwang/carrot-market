@@ -24,7 +24,7 @@ model User {
   favorites   Favorite[]
   posts       Post[]
   answers     Answer[]
-  wonderings  Wondering[]
+  wondering   Wondering[]
 }
 
 model Token {
@@ -74,7 +74,7 @@ model Post {
   userId      Int
   question    String   @db.MediumText
   answers     Answer[]
-  wonderings  Wondering[]
+  wondering   Wondering[]
 
   @@index([userId])
 }

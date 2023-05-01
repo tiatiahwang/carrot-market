@@ -27,6 +27,7 @@ async function handler(
         select: {
           answer: true,
           id: true,
+          createdAt: true,
           user: {
             select: {
               id: true,
@@ -39,7 +40,7 @@ async function handler(
       _count: {
         select: {
           answers: true,
-          wonderings: true,
+          wondering: true,
         },
       },
     },
