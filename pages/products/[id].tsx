@@ -48,10 +48,7 @@ const ProductDetail: NextPage = () => {
               <p className='text-sm font-medium text-gray-700'>
                 {data?.product?.user?.name}
               </p>
-              <Link
-                href={`/users/profiles/${data?.product?.user?.id}`}
-                legacyBehavior
-              >
+              <Link href={`/profile/${data?.product?.user?.id}`} legacyBehavior>
                 <a className='text-xs font-medium text-gray-500'>
                   View profile &rarr;
                 </a>

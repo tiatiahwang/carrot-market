@@ -6,7 +6,7 @@ import FloatingButton from '@/components/floating-button';
 import useUser from '@/libs/client/useUser';
 import { Product } from '@prisma/client';
 
-interface ProductWithCount extends Product {
+export interface ProductWithCount extends Product {
   _count: {
     favorites: number;
   };
@@ -30,7 +30,6 @@ const Home: NextPage = () => {
             key={product.id}
             title={product.name}
             price={product.price}
-            comments={1}
             hearts={product._count.favorites}
           />
         ))}
