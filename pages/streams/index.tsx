@@ -2,22 +2,47 @@ import type { NextPage } from 'next';
 import Link from 'next/link';
 import Layout from '@/components/layout';
 import FloatingButton from '@/components/floating-button';
+import { Stream } from '@prisma/client';
+import useSWR from 'swr';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import Pagination from '@/components/pagination';
 
-const Live: NextPage = () => {
+interface StreamsResponse {
+  ok: boolean;
+  streams: Stream[];
+  total: {
+    _all: number;
+  };
+}
+
+const Streams: NextPage = () => {
+  const router = useRouter();
+  const [currentPage, setCurrentPage] = useState<number>();
+
+  const { data } = useSWR<StreamsResponse>(`/api/streams?page=${currentPage}`);
+
+  useEffect(() => {
+    if (router?.query?.page) {
+      setCurrentPage(+router?.query?.page.toString());
+    }
+  }, [currentPage, router]);
+
   return (
     <Layout title='라이브' hasTabBar>
       <div className='space-y-4 divide-y-[1px] py-10'>
-        {[1, 1, 1, 1, 1, 1, 1].map((_, i) => (
-          <Link key={i} href={`/live/${i}`} legacyBehavior>
+        {data?.streams.map((stream) => (
+          <Link key={stream.id} href={`/streams/${stream.id}`} legacyBehavior>
             <a className='block px-4  pt-4'>
               <div className='aspect-video w-full rounded-md bg-slate-300 shadow-sm' />
               <h1 className='mt-2 text-2xl font-bold text-gray-900'>
-                Galaxy S50
+                {stream.name}
               </h1>
             </a>
           </Link>
         ))}
-        <FloatingButton href='/live/create'>
+        <Pagination currentPage={currentPage} total={data?.total?._all!} />
+        <FloatingButton href='/streams/create'>
           <svg
             className='h-6 w-6'
             fill='none'
@@ -37,4 +62,4 @@ const Live: NextPage = () => {
     </Layout>
   );
 };
-export default Live;
+export default Streams;
