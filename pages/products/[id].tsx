@@ -36,14 +36,24 @@ const ProductDetail: NextPage = () => {
     toggleFav({});
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+    }
+  }, [data]);
   return (
     <Layout canGoBack>
       <div className='px-4 py-4'>
         <div className='mb-8'>
-          <div className='h-96 bg-pink-100' />
+          <img
+            src={`https://imagedelivery.net/AjL7FiUUKL0mNbF_IibCSA/${data?.product?.image}/public`}
+            className='h-96 bg-slate-300'
+          />
           <div className='flex cursor-pointer items-center space-x-3 border-b border-t py-3'>
-            <div className='h-12 w-12 rounded-full bg-pink-200' />
+            <img
+              src={`https://imagedelivery.net/AjL7FiUUKL0mNbF_IibCSA/${data?.product?.user?.avatar}/avatar`}
+              className='h-12 w-12 rounded-full bg-slate-300'
+            />
             <div>
               <p className='text-sm font-medium text-gray-700'>
                 {data?.product?.user?.name}
