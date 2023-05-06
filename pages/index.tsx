@@ -3,8 +3,8 @@ import useSWR from 'swr';
 import Layout from '@/components/layout';
 import Item from '@/components/item';
 import FloatingButton from '@/components/floating-button';
-import useUser from '@/libs/client/useUser';
 import { Product } from '@prisma/client';
+import Head from 'next/head';
 
 export interface ProductWithCount extends Product {
   _count: {
@@ -18,11 +18,14 @@ interface ProductsResponse {
 }
 
 const Home: NextPage = () => {
-  const { user, isLoading } = useUser();
-  const { data } = useSWR<ProductsResponse>('/api/products');
-  console.log(data);
+  const { data } =
+    useSWR<ProductsResponse>('/api/products');
+
   return (
     <Layout title='홈' hasTabBar>
+      <Head>
+        <title>홈</title>
+      </Head>
       <div className='flex flex-col space-y-5 divide-y'>
         {data?.products?.map((product) => (
           <Item

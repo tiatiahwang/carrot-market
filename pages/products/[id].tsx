@@ -9,6 +9,7 @@ import useMutation from '@/libs/client/useMutation';
 import { cls } from '@/libs/client/utils';
 import { useEffect } from 'react';
 import useUser from '@/libs/client/useUser';
+import Image from 'next/image';
 
 interface ProductWithUser extends Product {
   user: User;
@@ -25,13 +26,21 @@ const ProductDetail: NextPage = () => {
   const { user, isLoading } = useUser();
   const router = useRouter();
   const { mutate } = useSWRConfig();
-  const { data, mutate: boundMutate } = useSWR<ProductDetailResponse>(
-    router.query.id ? `/api/products/${router.query.id}` : null,
+  const { data, mutate: boundMutate } =
+    useSWR<ProductDetailResponse>(
+      router.query.id
+        ? `/api/products/${router.query.id}`
+        : null,
+    );
+  const [toggleFav] = useMutation(
+    `/api/products/${router.query.id}/fav`,
   );
-  const [toggleFav] = useMutation(`/api/products/${router.query.id}/fav`);
   const onFavClick = () => {
     if (!data) return;
-    boundMutate((prev) => prev && { ...prev, isLiked: !prev.isLiked }, false);
+    boundMutate(
+      (prev) => prev && { ...prev, isLiked: !prev.isLiked },
+      false,
+    );
     // mutate('/api/users/me', (prev: any) => ({ ok: !prev.ok }), false);
     toggleFav({});
   };
@@ -45,12 +54,17 @@ const ProductDetail: NextPage = () => {
     <Layout canGoBack>
       <div className='px-4 py-4'>
         <div className='mb-8'>
-          <img
-            src={`https://imagedelivery.net/AjL7FiUUKL0mNbF_IibCSA/${data?.product?.image}/public`}
-            className='h-96 bg-slate-300'
-          />
+          <div className='relative pb-80'>
+            <Image
+              fill={true}
+              src={`https://imagedelivery.net/AjL7FiUUKL0mNbF_IibCSA/${data?.product?.image}/public`}
+              className='bg-slate-300 object-center'
+            />
+          </div>
           <div className='flex cursor-pointer items-center space-x-3 border-b border-t py-3'>
-            <img
+            <Image
+              width={48}
+              height={48}
               src={`https://imagedelivery.net/AjL7FiUUKL0mNbF_IibCSA/${data?.product?.user?.avatar}/avatar`}
               className='h-12 w-12 rounded-full bg-slate-300'
             />
@@ -58,7 +72,10 @@ const ProductDetail: NextPage = () => {
               <p className='text-sm font-medium text-gray-700'>
                 {data?.product?.user?.name}
               </p>
-              <Link href={`/profile/${data?.product?.user?.id}`} legacyBehavior>
+              <Link
+                href={`/profile/${data?.product?.user?.id}`}
+                legacyBehavior
+              >
                 <a className='text-xs font-medium text-gray-500'>
                   View profile &rarr;
                 </a>
@@ -72,7 +89,9 @@ const ProductDetail: NextPage = () => {
             <span className='mt-3 block text-3xl text-gray-900'>
               ${data?.product?.price}
             </span>
-            <p className='my-6 text-gray-700'>{data?.product?.description}</p>
+            <p className='my-6 text-gray-700'>
+              {data?.product?.description}
+            </p>
             <div className='flex items-center justify-between space-x-2'>
               <Button large text='Talk to seller' />
               <button
@@ -119,12 +138,16 @@ const ProductDetail: NextPage = () => {
           </div>
         </div>
         <div>
-          <h2 className='text-2xl font-bold text-gray-900'>Similar items</h2>
+          <h2 className='text-2xl font-bold text-gray-900'>
+            Similar items
+          </h2>
           <div className='mt-6 grid grid-cols-2 gap-4'>
             {data?.relatedProducts.map((product) => (
               <div key={product.id}>
                 <div className='mb-4 h-56 w-full bg-pink-100' />
-                <h3 className='-mb-1 text-gray-700'>{product.name}</h3>
+                <h3 className='-mb-1 text-gray-700'>
+                  {product.name}
+                </h3>
                 <span className='text-sm font-medium text-gray-900'>
                   ${product.price}
                 </span>
